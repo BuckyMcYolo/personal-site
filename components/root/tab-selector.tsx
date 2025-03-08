@@ -28,7 +28,10 @@ const TabSelector = ({ children }: { children: React.ReactNode }) => {
 
           <nav className="flex gap-6">
             {routes.map((route) => {
-              const isActive = pathname === route.path
+              const isActive =
+                route.path === "/"
+                  ? pathname === "/"
+                  : pathname.includes(route.path)
 
               return (
                 <Link

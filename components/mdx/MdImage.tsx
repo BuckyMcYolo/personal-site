@@ -9,6 +9,7 @@ import {
   MorphingDialogContainer,
 } from "../motion-primitives/morphing-dialog"
 import { cn } from "@/lib/utils"
+import { X } from "lucide-react"
 
 const MdImage = ({
   src,
@@ -49,23 +50,31 @@ const MdImage = ({
         />
       </MorphingDialogTrigger>
       <MorphingDialogContainer>
-        <MorphingDialogContent
-          style={{
-            borderRadius: "24px",
-            width: `${expandedWidth}px`,
-            height: `${expandedHeight}px`,
-            maxWidth: "95vw",
-            maxHeight: "90vh",
-          }}
-        >
-          <MorphingDialogImage
-            src={src}
-            alt={alt}
-            className={`h-full w-full `}
-            {...restProps}
-          />
-          <MorphingDialogClose className="text-zinc-900 dark:text-white cursor-pointer" />
-        </MorphingDialogContent>
+        <div className="relative duration-0">
+          {/* Close button positioned absolutely outside the image */}
+          <div className="absolute -top-14 -right-4 z-10 duration-0">
+            <MorphingDialogClose className="flex items-center justify-center w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm border border-border hover:bg-accent duration-0">
+              <X size={18} className="text-foreground" />
+            </MorphingDialogClose>
+          </div>
+
+          <MorphingDialogContent
+            style={{
+              borderRadius: "24px",
+              width: `${expandedWidth}px`,
+              height: `${expandedHeight}px`,
+              maxWidth: "95vw",
+              maxHeight: "90vh",
+            }}
+          >
+            <MorphingDialogImage
+              src={src}
+              alt={alt}
+              className={`h-full w-full`}
+              {...restProps}
+            />
+          </MorphingDialogContent>
+        </div>
       </MorphingDialogContainer>
     </MorphingDialog>
   )
