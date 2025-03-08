@@ -26,15 +26,48 @@ import {
   Image,
   Cloud,
   ImageIcon,
+  BarChart,
+  Rocket,
+  Lightbulb,
+  Palette,
 } from "lucide-react"
 import Link from "next/link"
 import { Magnetic } from "@/components/motion-primitives/magnetic"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { GlowEffect } from "@/components/motion-primitives/glow-effect"
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { BorderTrail } from "@/components/motion-primitives/border-trail"
 
 export default function Home() {
   const [backendVariant, setBackendVariant] = useState("Server")
   const [databaseVariant, setDatabaseVariant] = useState("Postgres")
+
+  const services = [
+    {
+      title: "Design",
+      icon: <Palette className="h-5 w-5" />,
+      description:
+        "Creating intuitive and beautiful user interfaces that focus on the user experience.",
+    },
+    {
+      title: "Development",
+      icon: <Code2 className="h-5 w-5" />,
+      description:
+        "Building fast, responsive websites and applications using modern technologies.",
+    },
+    {
+      title: "Strategy",
+      icon: <Lightbulb className="h-5 w-5" />,
+      description:
+        "Helping brands and businesses create meaningful digital experiences.",
+    },
+  ]
 
   const stackCategories = [
     {
@@ -139,7 +172,7 @@ export default function Home() {
         },
       ],
       currentVariant: "AI Tools",
-      setVariant: () => {}, // No toggle needed for AI
+      setVariant: () => {},
     },
   ]
   return (
@@ -175,15 +208,30 @@ export default function Home() {
           transition={{ delay: 0.5, duration: 0.5 }}
           className="flex flex-col sm:flex-row gap-4 justify-center pt-4"
         >
-          <Button asChild size="lg">
+          <Button
+            asChild
+            size="lg"
+            className="group duration-300 ease-in-out transition"
+          >
             <Link href="/portfolio">
               View my work
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight
+                className={`h-4 w-4 group-hover:translate-x-1 transition`}
+              />
             </Link>
           </Button>
-          <Button variant="outline" size="lg" asChild>
-            <Link href="/blog">Read my blog</Link>
-          </Button>
+          <div className="relative">
+            <GlowEffect
+              colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
+              mode="colorShift"
+              blur="soft"
+              duration={3}
+              scale={0.8}
+            />
+            <Button variant="outline" size="lg" asChild className="relative">
+              <Link href="/blog">Read my blog</Link>
+            </Button>
+          </div>
         </motion.div>
       </section>
 
@@ -195,33 +243,87 @@ export default function Home() {
       />
 
       <motion.section
-        className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-center space-y-6"
+      >
+        <div className="inline-flex items-center justify-center p-2 bg-primary/10 rounded-full mb-4">
+          <Rocket className="h-5 w-5 text-primary" />
+        </div>
+
+        <TextEffect
+          per="word"
+          preset="fade"
+          className="text-3xl font-bold tracking-tight"
+        >
+          Full Stack Engineer & Startup Founder
+        </TextEffect>
+
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          I specialize in building complete web applications from concept to
+          deployment. With expertise across the entire stack, I love creating
+          innovative solutions for startups and businesses.
+        </p>
+      </motion.section>
+
+      {/* Services Section */}
+      <motion.section
+        className="py-8"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.9, duration: 0.5 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
       >
-        {[
-          {
-            title: "Design",
-            description:
-              "Creating intuitive and beautiful user interfaces that focus on the user experience.",
-          },
-          {
-            title: "Development",
-            description:
-              "Building fast, responsive websites and applications using modern technologies.",
-          },
-          {
-            title: "Strategy",
-            description:
-              "Helping brands and businesses create meaningful digital experiences.",
-          },
-        ].map((item, index) => (
-          <div key={index} className="space-y-2">
-            <h3 className="text-xl font-semibold">{item.title}</h3>
-            <p className="text-muted-foreground">{item.description}</p>
-          </div>
-        ))}
+        <div className="flex items-center gap-2 mb-6">
+          <BarChart className="h-6 w-6" />
+          <h2 className="text-2xl font-bold tracking-tight">What I Do</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {services.map((service, index) => (
+            <div
+              key={index}
+              className="relative rounded-lg overflow-hidden group"
+            >
+              <BorderTrail
+                style={{
+                  boxShadow:
+                    "0px 0px 60px 30px rgb(255 255 255 / 50%), 0 0 100px 60px rgb(0 0 0 / 50%), 0 0 140px 90px rgb(0 0 0 / 50%)",
+                }}
+                size={100}
+                className="hidden group-hover:block absolute"
+              />
+              <div className="space-y-3 p-6 bg-muted/30 rounded-lg border border-border/40">
+                <div className="inline-flex items-center justify-center h-10 w-10 rounded-lg bg-primary/10">
+                  <span className="text-primary">{service.icon}</span>
+                </div>
+                <h3 className="text-xl font-semibold">{service.title}</h3>
+                <p className="text-muted-foreground">{service.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.section>
+      <motion.section
+        className="py-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+      >
+        <h2 className="text-2xl">Recent Blog posts</h2>
+        <section className="grid grid-cols-1 gap-3 pt-4">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <Card key={index} className="cursor-pointer hover:bg-accent/70">
+              <CardHeader>
+                <CardTitle>How to build a blog with Next.js and MDX</CardTitle>
+                <CardDescription>
+                  <span className="text-muted-foreground">Published on</span>
+                  <span className="text-muted-foreground">June 12, 2021</span>
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
+        </section>
       </motion.section>
       <motion.section
         className="py-10 w-full"
@@ -328,25 +430,25 @@ export default function Home() {
           </a>
         </p>
         <div className="grid grid-cols-2 md:flex md:flex-row gap-4 pt-4">
-          <Magnetic intensity={0.75} range={75} actionArea="global">
+          <Magnetic intensity={0.75} range={50} actionArea="global">
             <Button variant={"secondary"}>
               <Twitter className="h-6 w-6" />
               Twitter
             </Button>
           </Magnetic>
-          <Magnetic intensity={0.75} range={75} actionArea="global">
+          <Magnetic intensity={0.75} range={50} actionArea="global">
             <Button variant={"secondary"}>
               <Github className="h-6 w-6" />
               Github
             </Button>
           </Magnetic>
-          <Magnetic intensity={0.75} range={75} actionArea="global">
+          <Magnetic intensity={0.75} range={50} actionArea="global">
             <Button variant={"secondary"}>
               <Instagram className="h-6 w-6" />
               Instagram
             </Button>
           </Magnetic>
-          <Magnetic intensity={0.5} range={75} actionArea="global">
+          <Magnetic intensity={0.5} range={50} actionArea="global">
             <Button variant={"secondary"}>
               <Linkedin className="h-6 w-6" />
               LinkedIn
