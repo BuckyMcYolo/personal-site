@@ -7,6 +7,7 @@ import { CalendarIcon, ArrowRightIcon } from "lucide-react"
 
 const AllBlogs = ({
   blogs,
+  recentBlogs,
 }: {
   blogs: {
     meta: {
@@ -14,22 +15,34 @@ const AllBlogs = ({
     }
     slug: string
   }[]
+  recentBlogs?: boolean
 }) => {
   // Extract categories if they exist
 
   return (
     <section className="py-12">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="mb-10"
-      >
-        <h1 className="text-4xl font-bold mb-3">Blog</h1>
-        <p className="text-lg text-muted-foreground">
-          Thoughts, ideas, and technical explorations.
-        </p>
-      </motion.div>
+      {recentBlogs ? (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-10"
+        >
+          <h1 className="text-4xl font-bold mb-3">Recent Blogs</h1>
+        </motion.div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-10"
+        >
+          <h1 className="text-4xl font-bold mb-3">Blog</h1>
+          <p className="text-lg text-muted-foreground">
+            Thoughts, ideas, and technical explorations.
+          </p>
+        </motion.div>
+      )}
       <div className="grid gap-4 md:gap-6">
         {blogs.map((blog, idx) => {
           const categories = blog.meta.categories || []
