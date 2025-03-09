@@ -9,6 +9,7 @@ import { GlowEffect } from "@/components/motion-primitives/glow-effect"
 import { TextEffect } from "@/components/motion-primitives/text-effect"
 
 const Hero = () => {
+  const [isButtonHovered, setIsButtonHovered] = React.useState(false)
   return (
     <>
       <section className="space-y-6 text-center">
@@ -32,8 +33,9 @@ const Hero = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          Designer, developer, and creative thinker focused on building
-          beautiful digital experiences.
+          Full stack developer, entrepreneur, and startup founder. I&apos;m
+          passionate about solving business problems with clever and innovative
+          solutions.
         </motion.p>
 
         <motion.div
@@ -54,16 +56,25 @@ const Hero = () => {
               />
             </Link>
           </Button>
-          <div className="relative">
+          <div
+            className="relative"
+            onMouseEnter={() => setIsButtonHovered(true)}
+            onMouseLeave={() => setIsButtonHovered(false)}
+          >
             <GlowEffect
               colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
               mode="colorShift"
               blur="soft"
-              duration={3}
-              scale={0.8}
+              duration={isButtonHovered ? 1 : 3}
+              scale={isButtonHovered ? 0.9 : 0.8}
             />
-            <Button variant="outline" size="lg" asChild className="relative">
-              <Link href="/blog">Read my blog</Link>
+            <Button
+              variant="outline"
+              size="lg"
+              asChild
+              className="relative dark:hover:bg-black"
+            >
+              <Link href="/hire-me">Hire me</Link>
             </Button>
           </div>
         </motion.div>
@@ -93,7 +104,7 @@ const Hero = () => {
         </TextEffect>
 
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          I specialize in building complete web applications from concept to
+          I specialize in building full stack web apps from concept to
           deployment. With expertise across the entire stack, I love creating
           innovative solutions for startups and businesses.
         </p>

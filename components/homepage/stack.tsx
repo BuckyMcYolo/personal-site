@@ -2,12 +2,8 @@
 
 import React, { useState } from "react"
 import {
-  ArrowRight,
   Code2,
   Database,
-  Github,
-  Instagram,
-  Linkedin,
   Layout,
   Wind,
   Layers,
@@ -15,26 +11,46 @@ import {
   Cpu,
   Server,
   PenTool,
-  ToggleLeft,
-  Twitter,
   Brain,
   Sparkles,
   MessageSquare,
-  Image,
   Cloud,
   ImageIcon,
-  BarChart,
-  Rocket,
-  Lightbulb,
-  Palette,
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import {
+  SiAmazonapigateway,
+  SiAmazonec2,
+  SiAmazonrds,
+  SiAmazons3,
+  SiDrizzle,
+  SiExpress,
+  SiFlydotio,
+  SiHuggingface,
+  SiLangchain,
+  SiLucide,
+  SiMysql,
+  SiNetlify,
+  SiPostgresql,
+  SiPrisma,
+  SiRailway,
+  SiShadcnui,
+  SiVercel,
+} from "react-icons/si"
+import { PiOpenAiLogo, PiVectorThreeBold } from "react-icons/pi"
+import {
+  RiAnthropicFill,
+  RiNextjsLine,
+  RiTailwindCssFill,
+  RiVercelFill,
+} from "react-icons/ri"
+import { FaNodeJs, FaReact } from "react-icons/fa"
 
 const Stack = () => {
   const [backendVariant, setBackendVariant] = useState("Server")
-  const [databaseVariant, setDatabaseVariant] = useState("Postgres")
+  const [hostingVariant, setHostingVariant] = useState("AWS")
 
   const stackCategories = [
     {
@@ -46,12 +62,14 @@ const Stack = () => {
           name: "React",
           description: "Component-based UI library for interactive interfaces",
           technologies: [
-            { name: "React", icon: <Box className="h-4 w-4" /> },
-            { name: "Next.js", icon: <Cpu className="h-4 w-4" /> },
-            { name: "Tailwind CSS", icon: <Wind className="h-4 w-4" /> },
-            { name: "Shadcn UI", icon: <Layers className="h-4 w-4" /> },
-            { name: "Motion", icon: <PenTool className="h-4 w-4" /> },
-            { name: "Lucide", icon: <Layout className="h-4 w-4" /> },
+            { name: "React", icon: <FaReact className="h-4 w-4" /> },
+            { name: "Next.js", icon: <RiNextjsLine className="h-4 w-4" /> },
+            {
+              name: "Tailwind CSS",
+              icon: <RiTailwindCssFill className="h-4 w-4" />,
+            },
+            { name: "Shadcn UI", icon: <SiShadcnui className="h-4 w-4" /> },
+            { name: "Lucide Icons", icon: <SiLucide className="h-4 w-4" /> },
           ],
         },
       ],
@@ -67,57 +85,29 @@ const Stack = () => {
           name: "Server",
           description: "Traditional server-based architecture with Express",
           technologies: [
-            { name: "Node.js", icon: <Cpu className="h-4 w-4" /> },
-            { name: "Express", icon: <Wind className="h-4 w-4" /> },
-            { name: "REST API", icon: <Box className="h-4 w-4" /> },
-            { name: "JWT Auth", icon: <Layout className="h-4 w-4" /> },
+            { name: "Node.js", icon: <FaNodeJs className="h-4 w-4" /> },
+            { name: "Express", icon: <SiExpress className="h-4 w-4" /> },
+            { name: "PostgreSQL", icon: <SiPostgresql className="h-4 w-4" /> },
+            { name: "Drizzle ORM", icon: <SiDrizzle className="h-4 w-4" /> },
           ],
         },
         {
           name: "Serverless",
           description: "Event-driven cloud computing with serverless functions",
           technologies: [
-            { name: "Next.js API", icon: <Cpu className="h-4 w-4" /> },
-            { name: "Vercel Edge", icon: <Cloud className="h-4 w-4" /> },
-            { name: "Netlify Functions", icon: <Wind className="h-4 w-4" /> },
-            { name: "tRPC", icon: <Box className="h-4 w-4" /> },
+            { name: "Next.js API", icon: <RiNextjsLine className="h-4 w-4" /> },
+            { name: "Vercel Edge", icon: <RiVercelFill className="h-4 w-4" /> },
+            { name: "PostgreSQL", icon: <SiPostgresql className="h-4 w-4" /> },
+            { name: "Drizzle ORM", icon: <SiDrizzle className="h-4 w-4" /> },
           ],
         },
       ],
       currentVariant: backendVariant,
       setVariant: setBackendVariant,
     },
+
     {
-      title: "Database",
-      icon: <Database className="h-5 w-5" />,
-      description: "Storing and querying data efficiently",
-      variants: [
-        {
-          name: "Postgres",
-          description: "Powerful, open source object-relational database",
-          technologies: [
-            { name: "PostgreSQL", icon: <Database className="h-4 w-4" /> },
-            { name: "Drizzle ORM", icon: <Box className="h-4 w-4" /> },
-            { name: "SQL", icon: <Layout className="h-4 w-4" /> },
-            { name: "pgAdmin", icon: <Layers className="h-4 w-4" /> },
-          ],
-        },
-        {
-          name: "MySQL",
-          description: "Popular open-source relational database",
-          technologies: [
-            { name: "MySQL", icon: <Database className="h-4 w-4" /> },
-            { name: "Prisma", icon: <Box className="h-4 w-4" /> },
-            { name: "SQL", icon: <Layout className="h-4 w-4" /> },
-            { name: "MySQL Workbench", icon: <Layers className="h-4 w-4" /> },
-          ],
-        },
-      ],
-      currentVariant: databaseVariant,
-      setVariant: setDatabaseVariant,
-    },
-    {
-      title: "AI",
+      title: "AI Tools",
       icon: <Brain className="h-5 w-5" />,
       description: "Integrating AI capabilities into applications",
       variants: [
@@ -126,20 +116,60 @@ const Stack = () => {
           description:
             "Leveraging AI models and tools for intelligent applications",
           technologies: [
-            { name: "OpenAI API", icon: <Sparkles className="h-4 w-4" /> },
+            { name: "OpenAI API", icon: <PiOpenAiLogo className="h-4 w-4" /> },
             {
               name: "Anthropic Claude",
-              icon: <MessageSquare className="h-4 w-4" />,
+              icon: <RiAnthropicFill className="h-4 w-4" />,
             },
-            { name: "Hugging Face", icon: <Brain className="h-4 w-4" /> },
-            { name: "LangChain", icon: <Layers className="h-4 w-4" /> },
-            { name: "Replicate", icon: <ImageIcon className="h-4 w-4" /> },
-            { name: "Vercel AI SDK", icon: <Cloud className="h-4 w-4" /> },
+            {
+              name: "Hugging Face",
+              icon: <SiHuggingface className="h-4 w-4" />,
+            },
+            { name: "LangChain", icon: <SiLangchain className="h-4 w-4" /> },
+
+            {
+              name: "Vercel AI SDK",
+              icon: <RiVercelFill className="h-4 w-4" />,
+            },
           ],
         },
       ],
       currentVariant: "AI Tools",
       setVariant: () => {},
+    },
+    {
+      title: "Hosting",
+      icon: <Cloud className="h-5 w-5" />,
+      description: "Deploying applications to the cloud",
+      variants: [
+        {
+          name: "AWS",
+          description:
+            "Comprehensive cloud services with global infrastructure",
+          technologies: [
+            { name: "EC2", icon: <SiAmazonec2 className="h-4 w-4" /> },
+            { name: "S3", icon: <SiAmazons3 className="h-4 w-4" /> },
+            {
+              name: "Lambda",
+              icon: <SiAmazonapigateway className="h-4 w-4" />,
+            },
+            { name: "RDS", icon: <SiAmazonrds className="h-4 w-4" /> },
+          ],
+        },
+
+        {
+          name: "Alternative",
+          description: "Modern developer-friendly deployment platforms",
+          technologies: [
+            { name: "Vercel", icon: <SiVercel className="h-4 w-4" /> },
+            { name: "Netlify", icon: <SiNetlify className="h-4 w-4" /> },
+            { name: "Railway", icon: <SiRailway className="h-4 w-4" /> },
+            { name: "Fly.io", icon: <SiFlydotio className="h-4 w-4" /> },
+          ],
+        },
+      ],
+      currentVariant: hostingVariant,
+      setVariant: setHostingVariant,
     },
   ]
   return (

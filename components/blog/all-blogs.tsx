@@ -4,6 +4,7 @@ import Link from "next/link"
 import React from "react"
 import { motion } from "framer-motion"
 import { CalendarIcon, ArrowRightIcon } from "lucide-react"
+import { Badge } from "../ui/badge"
 
 const AllBlogs = ({
   blogs,
@@ -49,7 +50,7 @@ const AllBlogs = ({
           return (
             <Link href={"/blog/" + blog.slug} passHref key={blog.slug}>
               <motion.div
-                className="group relative flex flex-col sm:flex-row justify-between gap-4 border border-border rounded-xl p-6 hover:bg-accent/50 hover:shadow-md transition-all duration-300"
+                className="group relative flex flex-col sm:flex-row justify-between gap-4 border border-border rounded-xl p-6 hover:bg-accent/50 hover:shadow-md transition-all duration-300 group"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.25, duration: 0.4 }}
@@ -80,12 +81,25 @@ const AllBlogs = ({
                       <span>{blog.meta.date}</span>
                     </div>
                   )}
+
+                  {blog.meta.tags ? (
+                    <div className="flex items-center gap-2 pt-3">
+                      {blog.meta.tags.map((tag: string, idx: number) => (
+                        <Badge
+                          key={idx}
+                          variant={"secondary"}
+                          className="capitalize"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
 
                 <div className="flex items-center justify-end">
                   <motion.div
-                    className="p-2 rounded-full bg-primary/10 text-primary"
-                    whileHover={{ x: 5 }}
+                    className="p-2 rounded-full bg-primary/10 text-primary group-hover:translate-x-1 transition-transform duration-300"
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   >
                     <ArrowRightIcon size={20} />
