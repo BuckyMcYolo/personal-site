@@ -105,6 +105,13 @@ const PortfolioPage = () => {
           image: "/demo-ai-call-center.png",
           link: "https://demo-app.getaxon.ai/",
         },
+        {
+          title: "ESP-32 AI voice agent",
+          description: "ESP 32 agent for voice commands with AI processing",
+          tags: ["ESP32", "C / C++", "Elevenlabs", "OpenAI"],
+          image: "",
+          link: "https://github.com/BuckyMcYolo/ESP32-voice-ai-agent",
+        },
       ],
     },
     {
@@ -117,7 +124,7 @@ const PortfolioPage = () => {
           description:
             "Express server for handling voice calls in real time with AI",
           tags: ["Twilio", "Express", "Elevenlabs", "OpenAI", "Railway"],
-          image: "/api/placeholder/600/400",
+          image: "",
           link: "https://github.com/BuckyMcYolo/ai-call-center-voice-server",
         },
         {
@@ -125,34 +132,11 @@ const PortfolioPage = () => {
           description:
             "Websocket server for converting speech to text in real-time",
           tags: ["Express", "Websockets", "Deepgram", "AWS"],
-          image: "/api/placeholder/600/400",
+          image: "",
           link: "https://github.com/Digital-Healthcare-Solutions/voice-ws",
         },
       ],
     },
-    // {
-    //   title: "Other Projects",
-    //   icon: Layers,
-    //   description: "Various other technical projects and experiments",
-    //   projects: [
-    //     {
-    //       title: "Open Source Library",
-    //       description:
-    //         "JavaScript utility library for common frontend tasks with over 500 GitHub stars",
-    //       tags: ["JavaScript", "Open Source", "NPM Package"],
-    //       image: "/api/placeholder/600/400",
-    //       link: "/portfolio/open-source",
-    //     },
-    //     {
-    //       title: "Developer Toolkit",
-    //       description:
-    //         "Collection of tools for web developers including code generators and debugging utilities",
-    //       tags: ["TypeScript", "CLI", "Developer Tools"],
-    //       image: "/api/placeholder/600/400",
-    //       link: "/portfolio/dev-toolkit",
-    //     },
-    //   ],
-    // },
   ]
 
   return (
