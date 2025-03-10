@@ -33,6 +33,7 @@ import {
   SiLucide,
   SiMysql,
   SiNetlify,
+  SiOllama,
   SiPostgresql,
   SiPrisma,
   SiRailway,
@@ -70,6 +71,26 @@ const Stack = () => {
             },
             { name: "Shadcn UI", icon: <SiShadcnui className="h-4 w-4" /> },
             { name: "Lucide Icons", icon: <SiLucide className="h-4 w-4" /> },
+            {
+              name: "Better-Auth",
+              icon: (
+                <svg
+                  width="60"
+                  height="45"
+                  viewBox="0 0 60 45"
+                  fill="none"
+                  className="w-5 h-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M0 0H15V15H30V30H15V45H0V30V15V0ZM45 30V15H30V0H45H60V15V30V45H45H30V30H45Z"
+                    className="fill-black dark:fill-white"
+                  ></path>
+                </svg>
+              ),
+            },
           ],
         },
       ],
@@ -116,27 +137,28 @@ const Stack = () => {
           description:
             "Leveraging AI models and tools for intelligent applications",
           technologies: [
-            { name: "OpenAI API", icon: <PiOpenAiLogo className="h-4 w-4" /> },
+            { name: "OpenAI", icon: <PiOpenAiLogo className="h-4 w-4" /> },
             {
-              name: "Anthropic Claude",
+              name: "Claude",
               icon: <RiAnthropicFill className="h-4 w-4" />,
             },
             {
-              name: "Hugging Face",
-              icon: <SiHuggingface className="h-4 w-4" />,
+              name: "PgVector",
+              icon: <PiVectorThreeBold className="h-4 w-4" />,
             },
             { name: "LangChain", icon: <SiLangchain className="h-4 w-4" /> },
-
             {
               name: "Vercel AI SDK",
               icon: <RiVercelFill className="h-4 w-4" />,
             },
+            { name: "Ollama", icon: <SiOllama className="h-4 w-4" /> },
           ],
         },
       ],
       currentVariant: "AI Tools",
       setVariant: () => {},
     },
+
     {
       title: "Hosting",
       icon: <Cloud className="h-5 w-5" />,
@@ -161,10 +183,10 @@ const Stack = () => {
           name: "Alternative",
           description: "Modern developer-friendly deployment platforms",
           technologies: [
-            { name: "Vercel", icon: <SiVercel className="h-4 w-4" /> },
-            { name: "Netlify", icon: <SiNetlify className="h-4 w-4" /> },
             { name: "Railway", icon: <SiRailway className="h-4 w-4" /> },
             { name: "Fly.io", icon: <SiFlydotio className="h-4 w-4" /> },
+            { name: "Vercel", icon: <SiVercel className="h-4 w-4" /> },
+            { name: "Netlify", icon: <SiNetlify className="h-4 w-4" /> },
           ],
         },
       ],

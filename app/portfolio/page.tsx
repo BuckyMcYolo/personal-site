@@ -14,141 +14,29 @@ import {
   BadgeCheck,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-
-const ProjectCard = ({
-  title,
-  description,
-  tags,
-  image,
-  link,
-  delay = 0,
-}: {
-  title: string
-  description: string
-  tags: string[]
-  image: string
-  link: string
-  delay?: number
-}) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.4 }}
-      className="group"
-    >
-      <Link href={link} className="block">
-        <div className="rounded-lg border border-border/40 overflow-hidden bg-muted/40 transition-all duration-300 group-hover:border-primary/40 group-hover:shadow-md">
-          <div className="h-48 relative bg-gradient-to-br from-muted to-background overflow-hidden">
-            {image && (
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${image})` }}
-              />
-            )}
-            <div className="absolute inset-0 bg-black/30" />
-            <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-              <div className="bg-background/80 backdrop-blur-sm p-2 rounded-full">
-                <ArrowUpRight className="h-4 w-4" />
-              </div>
-            </div>
-          </div>
-
-          <div className="p-5 space-y-3">
-            <h3 className="text-lg font-medium group-hover:text-primary transition-colors">
-              {title}
-            </h3>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {description}
-            </p>
-
-            <div className="flex flex-wrap gap-2 pt-2">
-              {tags.map((tag, i) => (
-                <span
-                  key={i}
-                  className="text-xs py-1 px-2 rounded-full bg-muted border border-border/40"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </Link>
-    </motion.div>
-  )
-}
-
-const CategorySection = ({
-  title,
-  icon,
-  description,
-  projects,
-}: {
-  title: string
-  icon: React.ComponentType<any>
-  description: string
-  projects: any[]
-}) => {
-  const Icon = icon
-
-  return (
-    <section className="py-10">
-      <div className="space-y-2 mb-8">
-        <div className="flex items-center gap-2">
-          <Icon className="h-6 w-6 text-primary" />
-          <h2 className="text-2xl font-bold">
-            <TextEffect per="char" preset="fade">
-              {title}
-            </TextEffect>
-          </h2>
-        </div>
-        <p className="text-muted-foreground">{description}</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project, index) => (
-          <ProjectCard
-            key={project.title}
-            {...project}
-            delay={0.2 + index * 0.1}
-          />
-        ))}
-      </div>
-    </section>
-  )
-}
+import { CategorySection } from "@/components/portfolio/category"
 
 const PortfolioPage = () => {
   const categories = [
     {
-      title: "Web Applications",
+      title: "Web Apps",
       icon: Code2,
       description: "Full-stack web applications built with modern technologies",
       projects: [
         {
-          title: "Task Management Platform",
+          title: "Axon AI",
           description:
-            "A collaborative task management platform with real-time updates and team features",
-          tags: ["React", "Node.js", "Postgres", "WebSockets"],
-          image: "/api/placeholder/600/400",
-          link: "/portfolio/task-management",
-        },
-        {
-          title: "Finance Dashboard",
-          description:
-            "Interactive dashboard for monitoring financial metrics and visualizing data",
-          tags: ["Next.js", "Tailwind", "Recharts", "API Integration"],
-          image: "/api/placeholder/600/400",
-          link: "/portfolio/finance-dashboard",
-        },
-        {
-          title: "E-learning Platform",
-          description:
-            "Educational platform with course management, quizzes, and progress tracking",
-          tags: ["React", "Express", "MongoDB", "Authentication"],
-          image: "/api/placeholder/600/400",
-          link: "/portfolio/e-learning",
+            "AI-powered practice management app for outpatient medical clinics",
+          tags: [
+            "Nextjs",
+            "Postgres",
+            "WebSockets",
+            "Twilio",
+            "Deepgram",
+            "AWS",
+          ],
+          image: "/axon-ai-dashboard.png",
+          link: "https://app.getaxon.ai/",
         },
       ],
     },
@@ -159,28 +47,26 @@ const PortfolioPage = () => {
         "Responsive websites with modern design and optimal performance",
       projects: [
         {
-          title: "Eco-friendly Product Site",
+          title: "Axon AI Marketing",
           description:
-            "E-commerce website for eco-friendly products with dynamic filtering and cart functionality",
-          tags: ["Next.js", "Tailwind CSS", "Shopify API"],
-          image: "/api/placeholder/600/400",
-          link: "/portfolio/eco-products",
+            "Marketing Website for Axon AI with product information, intercom integration, and pricing",
+          tags: [
+            "Next.js",
+            "React",
+            "Tailwind CSS",
+            "ShadCN UI",
+            "Framer Motion",
+          ],
+          image: "/axon-ai-light.png",
+          link: "https://www.getaxon.ai/",
         },
         {
-          title: "Architecture Portfolio",
+          title: "Midsouth Neurology",
           description:
-            "Visually stunning portfolio website for an architecture firm featuring project galleries",
-          tags: ["React", "GSAP", "Responsive Design"],
-          image: "/api/placeholder/600/400",
-          link: "/portfolio/architecture",
-        },
-        {
-          title: "Food Delivery Service",
-          description:
-            "Website for a local food delivery service with ordering capabilities",
-          tags: ["Next.js", "Stripe", "Google Maps API"],
-          image: "/api/placeholder/600/400",
-          link: "/portfolio/food-delivery",
+            "Medical website for a neurology clinic with referral portal and patient resources",
+          tags: ["React", "Nextjs", "Tailwind CSS", "Shadcn UI"],
+          image: "/midsouth-neurology.png",
+          link: "https://midsouthneurology.com/",
         },
       ],
     },
@@ -191,28 +77,33 @@ const PortfolioPage = () => {
         "Applications leveraging artificial intelligence and machine learning",
       projects: [
         {
-          title: "AI Content Generator",
+          title: "AI scribe",
           description:
-            "Tool that generates marketing copy and social media content using AI",
-          tags: ["OpenAI API", "React", "Node.js"],
-          image: "/api/placeholder/600/400",
-          link: "/portfolio/ai-content",
+            "Ambient listening tool for transcribing audio to notes in real-time",
+          tags: ["Deepgram", "Claude", "React", "Websockets"],
+          image: "/ai-scribe.png",
+          link: "https://www.getaxon.ai/product/ai-scribe",
         },
         {
-          title: "Intelligent Customer Service",
-          description:
-            "AI-powered customer service chatbot with context awareness",
-          tags: ["Claude API", "Next.js", "Vercel AI SDK"],
-          image: "/api/placeholder/600/400",
+          title: "AI Hospital Chatbot",
+          description: "Chatbot for hospital policy information.",
+          tags: [
+            "OpenAI",
+            "React",
+            "Pinecone DB",
+            "Llama Index",
+            "Vercel AI SDK",
+          ],
+          image: "/hospital-policy-chat.png",
           link: "/portfolio/customer-service",
         },
         {
-          title: "Image Analysis Tool",
+          title: "AI Call Center Demo",
           description:
-            "Platform for analyzing and extracting data from images using AI",
-          tags: ["Computer Vision", "React", "Python"],
-          image: "/api/placeholder/600/400",
-          link: "/portfolio/image-analysis",
+            "Demo application showcasing AI call center capabilities",
+          tags: ["Elevenlabs", "OpenAI", "Twilio", "React", "Langchain"],
+          image: "/demo-ai-call-center.png",
+          link: "https://demo-app.getaxon.ai/",
         },
       ],
     },
@@ -222,46 +113,46 @@ const PortfolioPage = () => {
       description: "Backend servers, APIs, and microservices",
       projects: [
         {
-          title: "Fitness Tracker",
+          title: "AI Call Center Voice Server",
           description:
-            "Mobile app for tracking workouts, nutrition, and health metrics",
-          tags: ["React Native", "Redux", "Health APIs"],
+            "Express server for handling voice calls in real time with AI",
+          tags: ["Twilio", "Express", "Elevenlabs", "OpenAI", "Railway"],
           image: "/api/placeholder/600/400",
-          link: "/portfolio/fitness-tracker",
+          link: "https://github.com/BuckyMcYolo/ai-call-center-voice-server",
         },
         {
-          title: "Travel Companion",
+          title: "WS Speech to Text Server",
           description:
-            "App for planning trips, finding local attractions, and managing itineraries",
-          tags: ["React Native", "Maps Integration", "Firebase"],
+            "Websocket server for converting speech to text in real-time",
+          tags: ["Express", "Websockets", "Deepgram", "AWS"],
           image: "/api/placeholder/600/400",
-          link: "/portfolio/travel-companion",
+          link: "https://github.com/Digital-Healthcare-Solutions/voice-ws",
         },
       ],
     },
-    {
-      title: "Other Projects",
-      icon: Layers,
-      description: "Various other technical projects and experiments",
-      projects: [
-        {
-          title: "Open Source Library",
-          description:
-            "JavaScript utility library for common frontend tasks with over 500 GitHub stars",
-          tags: ["JavaScript", "Open Source", "NPM Package"],
-          image: "/api/placeholder/600/400",
-          link: "/portfolio/open-source",
-        },
-        {
-          title: "Developer Toolkit",
-          description:
-            "Collection of tools for web developers including code generators and debugging utilities",
-          tags: ["TypeScript", "CLI", "Developer Tools"],
-          image: "/api/placeholder/600/400",
-          link: "/portfolio/dev-toolkit",
-        },
-      ],
-    },
+    // {
+    //   title: "Other Projects",
+    //   icon: Layers,
+    //   description: "Various other technical projects and experiments",
+    //   projects: [
+    //     {
+    //       title: "Open Source Library",
+    //       description:
+    //         "JavaScript utility library for common frontend tasks with over 500 GitHub stars",
+    //       tags: ["JavaScript", "Open Source", "NPM Package"],
+    //       image: "/api/placeholder/600/400",
+    //       link: "/portfolio/open-source",
+    //     },
+    //     {
+    //       title: "Developer Toolkit",
+    //       description:
+    //         "Collection of tools for web developers including code generators and debugging utilities",
+    //       tags: ["TypeScript", "CLI", "Developer Tools"],
+    //       image: "/api/placeholder/600/400",
+    //       link: "/portfolio/dev-toolkit",
+    //     },
+    //   ],
+    // },
   ]
 
   return (

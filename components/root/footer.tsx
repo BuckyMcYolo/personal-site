@@ -67,7 +67,7 @@ const Footer = () => {
                 href="https://github.com/BuckyMcYolo"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary"
+                className="text-primary hover:underline"
               >
                 GitHub
               </a>

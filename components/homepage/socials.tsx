@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Magnetic } from "@/components/motion-primitives/magnetic"
 import { Twitter, Github, Instagram, Linkedin } from "lucide-react"
+import Link from "next/link"
 
 const Socials = () => {
   return (
@@ -26,28 +27,32 @@ const Socials = () => {
       </p>
       <div className="grid grid-cols-2 md:flex md:flex-row gap-4 pt-4">
         <Magnetic intensity={0.75} range={50} actionArea="global">
-          <Button variant={"secondary"}>
-            <Twitter className="h-6 w-6" />
-            Twitter
-          </Button>
+          <Link href="https://twitter.com/jacobowens75" target="_blank">
+            <Button variant={"secondary"} className="cursor-pointer">
+              <Twitter className="h-6 w-6" />
+              Twitter
+            </Button>
+          </Link>
         </Magnetic>
+
         <Magnetic intensity={0.75} range={50} actionArea="global">
-          <Button variant={"secondary"}>
-            <Github className="h-6 w-6" />
-            Github
-          </Button>
-        </Magnetic>
-        <Magnetic intensity={0.75} range={50} actionArea="global">
-          <Button variant={"secondary"}>
-            <Instagram className="h-6 w-6" />
-            Instagram
-          </Button>
+          <Link href="https://github.com/BuckyMcYolo" target="_blank">
+            <Button variant={"secondary"} className="cursor-pointer">
+              <Github className="h-6 w-6" />
+              Github
+            </Button>
+          </Link>
         </Magnetic>
         <Magnetic intensity={0.5} range={50} actionArea="global">
-          <Button variant={"secondary"}>
-            <Linkedin className="h-6 w-6" />
-            LinkedIn
-          </Button>
+          <Link
+            href="https://www.linkedin.com/in/jacob-owens-8540b7270/"
+            target="_blank"
+          >
+            <Button variant={"secondary"} className="cursor-pointer">
+              <Linkedin className="h-6 w-6" />
+              LinkedIn
+            </Button>
+          </Link>
         </Magnetic>
       </div>
     </motion.section>
