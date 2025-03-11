@@ -51,7 +51,7 @@ const Services = () => {
             key={index}
             className="relative h-full overflow-hidden rounded-xl bg-zinc-300/30 p-[1px] dark:bg-zinc-700/30"
           >
-            <Spotlight className="bg-blue-500 blur-2xl" size={124} />
+            <Spotlight className="bg-blue-500 blur-2xl" size={200} />
             <div className="relative h-full w-full rounded-xl bg-white dark:bg-black">
               <div className="space-y-3 p-6 bg-muted/30 rounded-lg border border-border/40">
                 <div className="inline-flex items-center justify-center h-10 w-10 rounded-lg bg-primary/10">

@@ -323,16 +323,13 @@ const HireMePage = () => {
         </section>
 
         <div className="flex justify-center gap-4 pt-8">
-          <Link
-            href="mailto:jacobowens75@gmail.com"
-            className="flex items-center"
-          >
+          <a href="mailto:jacobowens75@gmail.com" className="flex items-center">
             <Button size="lg" className="group">
               <Mail className="mr-2 h-4 w-4" />
               Get in touch
               <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
             </Button>
-          </Link>
+          </a>
           <Link href="/portfolio" className="flex items-center">
             <Button variant="outline" size="lg" className="group">
               <ExternalLink className="mr-2 h-4 w-4" />
@@ -603,11 +600,11 @@ const HireMePage = () => {
         </section>
 
         <div className="flex justify-center pt-8">
-            <Button size="lg" className="group mr-4" onClick={downloadResume}>
-              <FileText className="mr-2 h-4 w-4" />
-              Download Resume
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
-            </Button>
+          <Button size="lg" className="group mr-4" onClick={downloadResume}>
+            <FileText className="mr-2 h-4 w-4" />
+            Download Resume
+            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
+          </Button>
 
           <Link
             href="mailto:jacobowens75@gmail.com"
