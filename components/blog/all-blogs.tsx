@@ -5,6 +5,7 @@ import React from "react"
 import { motion } from "framer-motion"
 import { CalendarIcon, ArrowRightIcon } from "lucide-react"
 import { Badge } from "../ui/badge"
+import { Spotlight } from "../motion-primitives/spotlight"
 
 const AllBlogs = ({
   blogs,
@@ -50,12 +51,53 @@ const AllBlogs = ({
           return (
             <Link href={"/blog/" + blog.slug} passHref key={blog.slug}>
               <motion.div
-                className="group relative flex flex-col sm:flex-row justify-between gap-4 border border-border rounded-xl p-6 hover:bg-accent/50 hover:shadow-md transition-all duration-300 group"
+                className="group relative flex flex-col sm:flex-row justify-between gap-4 border border-border rounded-xl p-6 hover:shadow-md transition-all duration-300 overflow-hidden hover:scale-[1.01] hover:border-blue-300 dark:hover:border-blue-900"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.25, duration: 0.4 }}
               >
-                <div className="flex-1">
+                {/* Spotlight effect and grid background */}
+                <Spotlight
+                  className="bg-blue-100/75 dark:bg-blue-950/40 blur-xl"
+                  size={64}
+                />
+                <div className="absolute inset-0">
+                  <svg className="h-full w-full">
+                    <defs>
+                      <pattern
+                        id={`grid-pattern-${blog.slug}`}
+                        width="8"
+                        height="8"
+                        patternUnits="userSpaceOnUse"
+                      >
+                        <path
+                          xmlns="http://www.w3.org/2000/svg"
+                          d="M0 4H4M4 4V0M4 4H8M4 4V8"
+                          stroke="currentColor"
+                          strokeOpacity="0.3"
+                          className="stroke-white dark:stroke-neutral-950"
+                        />
+                        <rect
+                          x="3"
+                          y="3"
+                          width="2"
+                          height="2"
+                          fill="currentColor"
+                          fillOpacity="0.25"
+                          className="fill-white dark:fill-neutral-950"
+                        />
+                      </pattern>
+                    </defs>
+                    <rect
+                      width="100%"
+                      height="100%"
+                      fill={`url(#grid-pattern-${blog.slug})`}
+                    />
+                  </svg>
+                </div>
+
+                {/* Blog content */}
+                <div className="flex-1 relative z-10">
                   <div className="flex flex-wrap gap-2 mb-2">
                     {categories.map((category: string, idx: number) => (
                       <span
@@ -97,7 +139,7 @@ const AllBlogs = ({
                   ) : null}
                 </div>
 
-                <div className="flex items-center justify-end">
+                <div className="flex items-center justify-end relative z-10">
                   <motion.div
                     className="p-2 rounded-full bg-primary/10 text-primary group-hover:translate-x-1 transition-transform duration-300"
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}

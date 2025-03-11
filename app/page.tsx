@@ -3,6 +3,7 @@ import Stack from "@/components/homepage/stack"
 import Socials from "@/components/homepage/socials"
 import Services from "@/components/homepage/services"
 import Hero from "@/components/homepage/hero"
+import { Spotlight } from "@/components/motion-primitives/spotlight"
 
 export default function Home() {
   return (

@@ -3,7 +3,7 @@
 import React from "react"
 import { motion } from "framer-motion"
 import { BarChart, Code2, Lightbulb, Palette } from "lucide-react"
-import { BorderTrail } from "../motion-primitives/border-trail"
+import { Spotlight } from "../motion-primitives/spotlight"
 
 const services = [
   {
@@ -43,22 +43,17 @@ const Services = () => {
         {services.map((service, index) => (
           <div
             key={index}
-            className="relative rounded-lg overflow-hidden group"
+            className="relative h-[200px] overflow-hidden rounded-xl bg-zinc-300/30 p-[1px] dark:bg-zinc-700/30"
           >
-            <BorderTrail
-              style={{
-                boxShadow:
-                  "0px 0px 60px 30px rgb(255 255 255 / 50%), 0 0 100px 60px rgb(0 0 0 / 50%), 0 0 140px 90px rgb(0 0 0 / 50%)",
-              }}
-              size={100}
-              className="hidden group-hover:block absolute"
-            />
-            <div className="space-y-3 p-6 bg-muted/30 rounded-lg border border-border/40">
-              <div className="inline-flex items-center justify-center h-10 w-10 rounded-lg bg-primary/10">
-                <span className="text-primary">{service.icon}</span>
+            <Spotlight className="bg-blue-500 blur-2xl" size={124} />
+            <div className="relative h-full w-full rounded-xl bg-white dark:bg-black">
+              <div className="space-y-3 p-6 bg-muted/30 rounded-lg border border-border/40">
+                <div className="inline-flex items-center justify-center h-10 w-10 rounded-lg bg-primary/10">
+                  <span className="text-primary">{service.icon}</span>
+                </div>
+                <h3 className="text-xl font-semibold">{service.title}</h3>
+                <p className="text-muted-foreground">{service.description}</p>
               </div>
-              <h3 className="text-xl font-semibold">{service.title}</h3>
-              <p className="text-muted-foreground">{service.description}</p>
             </div>
           </div>
         ))}
