@@ -2,27 +2,33 @@
 
 import React from "react"
 import { motion } from "framer-motion"
-import { BarChart, Code2, Lightbulb, Palette } from "lucide-react"
+import {
+  BarChart,
+  Code2,
+  Database,
+  Globe,
+  Lightbulb,
+  Palette,
+} from "lucide-react"
 import { Spotlight } from "../motion-primitives/spotlight"
-
 const services = [
   {
-    title: "Design",
-    icon: <Palette className="h-5 w-5" />,
-    description:
-      "Creating intuitive and beautiful user interfaces that focus on the user experience.",
-  },
-  {
-    title: "Development",
+    title: "Frontend Development",
     icon: <Code2 className="h-5 w-5" />,
     description:
-      "Building fast, responsive websites and applications using modern technologies.",
+      "Building responsive, performant web applications with React, Next.js, and modern frontend technologies that deliver exceptional user experiences.",
   },
   {
-    title: "Strategy",
-    icon: <Lightbulb className="h-5 w-5" />,
+    title: "Backend Engineering",
+    icon: <Database className="h-5 w-5" />,
     description:
-      "Helping brands and businesses create meaningful digital experiences.",
+      "Developing robust APIs, microservices, and server-side applications with Node.js, Python, and other backend technologies that scale efficiently.",
+  },
+  {
+    title: "Full Stack Solutions",
+    icon: <Globe className="h-5 w-5" />,
+    description:
+      "Creating end-to-end applications from conception to deployment, integrating frontend and backend systems into cohesive, production-ready products.",
   },
 ]
 
@@ -43,7 +49,7 @@ const Services = () => {
         {services.map((service, index) => (
           <div
             key={index}
-            className="relative h-[200px] overflow-hidden rounded-xl bg-zinc-300/30 p-[1px] dark:bg-zinc-700/30"
+            className="relative h-full overflow-hidden rounded-xl bg-zinc-300/30 p-[1px] dark:bg-zinc-700/30"
           >
             <Spotlight className="bg-blue-500 blur-2xl" size={124} />
             <div className="relative h-full w-full rounded-xl bg-white dark:bg-black">

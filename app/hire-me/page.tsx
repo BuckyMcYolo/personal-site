@@ -35,6 +35,16 @@ const HireMePage = () => {
     "engineer"
   )
 
+  async function downloadResume() {
+    const res = await fetch("/resume.pdf")
+    const blob = await res.blob()
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = "Jacob Owens Resume.pdf"
+    a.click()
+  }
+
   const freelanceServices = [
     {
       title: "Web Development",
@@ -593,13 +603,11 @@ const HireMePage = () => {
         </section>
 
         <div className="flex justify-center pt-8">
-          <Link href="/resume.pdf" className="flex items-center">
-            <Button size="lg" className="group mr-4">
+            <Button size="lg" className="group mr-4" onClick={downloadResume}>
               <FileText className="mr-2 h-4 w-4" />
               Download Resume
               <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
             </Button>
-          </Link>
 
           <Link
             href="mailto:jacobowens75@gmail.com"
