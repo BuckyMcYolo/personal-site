@@ -313,7 +313,10 @@ const HireMePage = () => {
         </section>
 
         <div className="flex justify-center gap-4 pt-8">
-          <Link href="mailto:contact@example.com" className="flex items-center">
+          <Link
+            href="mailto:jacobowens75@gmail.com"
+            className="flex items-center"
+          >
             <Button size="lg" className="group">
               <Mail className="mr-2 h-4 w-4" />
               Get in touch
@@ -590,23 +593,23 @@ const HireMePage = () => {
         </section>
 
         <div className="flex justify-center pt-8">
-          <Button size="lg" className="group mr-4">
-            <Link href="/resume.pdf" className="flex items-center">
+          <Link href="/resume.pdf" className="flex items-center">
+            <Button size="lg" className="group mr-4">
               <FileText className="mr-2 h-4 w-4" />
               Download Resume
               <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
-            </Link>
-          </Button>
+            </Button>
+          </Link>
 
-          <Button variant="outline" size="lg" className="group">
-            <Link
-              href="mailto:contact@example.com"
-              className="flex items-center"
-            >
+          <Link
+            href="mailto:jacobowens75@gmail.com"
+            className="flex items-center"
+          >
+            <Button variant="outline" size="lg" className="group">
               <Mail className="mr-2 h-4 w-4" />
               Contact Me
-            </Link>
-          </Button>
+            </Button>
+          </Link>
         </div>
       </motion.div>
     ),
