@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { ArrowRight, Rocket } from "lucide-react"
 import Link from "next/link"
@@ -10,6 +10,24 @@ import { TextEffect } from "@/components/motion-primitives/text-effect"
 
 const Hero = () => {
   const [isButtonHovered, setIsButtonHovered] = React.useState(false)
+  const [screenWidth, setScreenWidth] = useState(0)
+
+  useEffect(() => {
+    if (window && window.innerWidth) {
+      setScreenWidth(window.innerWidth)
+
+      window.addEventListener("resize", () => {
+        setScreenWidth(window.innerWidth)
+      })
+
+      return () => {
+        window.removeEventListener("resize", () => {
+          setScreenWidth(window.innerWidth)
+        })
+      }
+    }
+  }, [])
+
   return (
     <>
       <section className="space-y-6 text-center">
@@ -66,13 +84,13 @@ const Hero = () => {
               mode="colorShift"
               blur="soft"
               duration={isButtonHovered ? 1 : 3}
-              scale={isButtonHovered ? 0.9 : 0.8}
+              scale={screenWidth < 768 ? 1 : isButtonHovered ? 0.9 : 0.8}
             />
             <Button
               variant="outline"
               size="lg"
               asChild
-              className="relative dark:hover:bg-black"
+              className="relative dark:hover:bg-black w-full"
             >
               <Link href="/hire-me">Hire me</Link>
             </Button>
