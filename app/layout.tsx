@@ -4,6 +4,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import TabSelector from "@/components/root/tab-selector"
 import Footer from "@/components/root/footer"
+import { ChatWidget } from "@/components/chat-widget/base"
 
 const rubik = Rubik({
   variable: "--font-rubik",
@@ -32,6 +33,7 @@ export default function RootLayout({
           <div className="flex flex-col items-center md:pt-24 min-h-screen">
             <TabSelector>{children}</TabSelector>
             <Footer />
+            <ChatWidget />
           </div>
         </ThemeProvider>
       </body>
