@@ -18,16 +18,10 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import useClickOutside from "../motion-primitives/useClickOutside"
 
-// Animation transition settings
-const transition = {
-  type: "spring",
-  bounce: 0.1,
-  duration: 0.25,
-}
-
 export const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [screenWidth, setScreenWidth] = useState(0)
+
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState([
     {
@@ -38,20 +32,27 @@ export const ChatWidget = () => {
   ])
 
   const ref = useRef<HTMLDivElement>(null!)
-  const [contentRef, { height: contentHeight }] = useMeasure()
-  const [containerRef, { width: containerWidth }] = useMeasure()
-  const [maxWidth, setMaxWidth] = useState(0)
 
   // Close chat when clicking outside
   useClickOutside(ref, () => {
     setIsOpen(false)
   })
 
-  // Set max width based on container width
   useEffect(() => {
-    if (!containerWidth || maxWidth > 0) return
-    setMaxWidth(containerWidth)
-  }, [containerWidth, maxWidth])
+    if (window) {
+      setScreenWidth(window.innerWidth)
+
+      window.addEventListener("resize", () => {
+        setScreenWidth(window.innerWidth)
+      })
+
+      return () => {
+        window.removeEventListener("resize", () => {
+          setScreenWidth(window.innerWidth)
+        })
+      }
+    }
+  }, [])
 
   // Simulate AI responses based on user input
   const getAIResponse = (userMessage: string) => {
@@ -106,102 +107,93 @@ export const ChatWidget = () => {
   }
 
   return (
-    <MotionConfig transition={transition}>
+    <MotionConfig
+      transition={{
+        type: "spring",
+        bounce: 0.1,
+        duration: 0.25,
+      }}
+    >
       <div className="fixed bottom-4 right-4 z-50" ref={ref}>
         <div className="relative">
-          <AnimatePresence initial={false} mode="sync">
+          <AnimatePresence initial={false} mode="wait">
             {isOpen && (
               <motion.div
                 key="chat-panel"
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                initial={{ opacity: 0, scale: 0.75, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                className="absolute bottom-0 right-0 mb-2"
+                exit={{ opacity: 0, scale: 0.75, y: 20 }}
+                className={"absolute bottom-0 right-0 mb-2"}
                 style={{
-                  width: isExpanded ? Math.max(420, maxWidth) : 320,
+                  width:
+                    screenWidth > 420
+                      ? Math.min(420, screenWidth)
+                      : screenWidth - 40,
                 }}
               >
-                <Card className="shadow-lg overflow-hidden border border-zinc-950/10 dark:border-neutral-700 py-0">
-                  <CardHeader className="bg-primary/10 py-2">
+                <div className="shadow-lg overflow-hidden border border-zinc-950/10 dark:border-neutral-900 py-0 bg-white dark:bg-black rounded-lg">
+                  <div className="bg-neutral-100 dark:bg-primary/10 py-2 px-4 border-b border-neutral-200 dark:border-neutral-900">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg font-medium">
-                        Chat with AI Assistant
-                      </CardTitle>
-                      <div className="flex space-x-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => setIsExpanded(!isExpanded)}
-                          className="h-8 w-8"
-                        >
-                          {isExpanded ? (
-                            <Minimize2 className="h-4 w-4" />
-                          ) : (
-                            <Maximize2 className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
+                      <div className="text-lg font-medium">Ask AI about me</div>
                     </div>
-                  </CardHeader>
+                  </div>
 
-                  <motion.div
-                    animate={{ height: isExpanded ? 400 : 240 }}
-                    transition={{ ...transition, duration: 0.2 }}
-                  >
-                    <CardContent className="p-0">
-                      <ScrollArea className="h-60 px-4 py-2">
-                        <div className="space-y-4" ref={contentRef}>
-                          {messages.map((msg, index) => (
-                            <motion.div
-                              key={index}
-                              className={`flex ${
+                  <motion.div>
+                    <ScrollArea
+                      className={cn(`px-4 py-2`, "h-[25.5rem]")}
+                      type="auto"
+                    >
+                      <div className="space-y-4 pb-3">
+                        {messages.map((msg, index) => (
+                          <motion.div
+                            key={index}
+                            className={`flex ${
+                              msg.role === "user"
+                                ? "justify-end"
+                                : "justify-start"
+                            }`}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1 * (index % 2) }}
+                          >
+                            <div
+                              className={`flex items-start max-w-[80%] ${
                                 msg.role === "user"
-                                  ? "justify-end"
-                                  : "justify-start"
-                              }`}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.1 * (index % 2) }}
+                                  ? "bg-primary text-primary-foreground"
+                                  : "bg-muted"
+                              } rounded-lg px-3 py-2`}
                             >
-                              <div
-                                className={`flex items-start max-w-[80%] ${
-                                  msg.role === "user"
-                                    ? "bg-primary text-primary-foreground"
-                                    : "bg-muted"
-                                } rounded-lg px-3 py-2`}
-                              >
-                                {msg.role === "assistant" && (
-                                  <Avatar className="h-6 w-6 mr-2 mt-1">
-                                    <MessageCircle className="h-4 w-4" />
-                                  </Avatar>
-                                )}
-                                <div>
-                                  <p
-                                    className={`text-sm ${
-                                      msg.role === "user"
-                                        ? "text-primary-foreground"
-                                        : ""
-                                    }`}
-                                  >
-                                    {msg.content}
-                                  </p>
-                                </div>
+                              {msg.role === "assistant" && (
+                                <Avatar className="h-6 w-6 mr-2 mt-1">
+                                  <MessageCircle className="h-4 w-4" />
+                                </Avatar>
+                              )}
+                              <div>
+                                <p
+                                  className={`text-sm ${
+                                    msg.role === "user"
+                                      ? "text-primary-foreground"
+                                      : ""
+                                  }`}
+                                >
+                                  {msg.content}
+                                </p>
                               </div>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </ScrollArea>
-                    </CardContent>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </ScrollArea>
                   </motion.div>
 
-                  <CardFooter className="p-3 border-t">
-                    <div className="flex w-full items-center space-x-2 bg-background dark:bg-neutral-900 rounded-lg pr-3">
+                  <div className="p-3 border-t">
+                    <div className="flex w-full items-center space-x-2 bg-neutral-100 dark:bg-neutral-900 rounded-lg pr-3">
                       <Textarea
                         placeholder="Ask me anything..."
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className="flex-1"
+                        className="min-h-4 max-h-16 h-fit"
                         variant="filled"
                       />
                       <Button
@@ -209,22 +201,19 @@ export const ChatWidget = () => {
                         onClick={handleSend}
                         disabled={!message.trim()}
                         variant={"ghost"}
+                        className="hover:bg-neutral-50 dark:hover:bg-neutral-800"
                       >
                         <Send className="size-4" />
                       </Button>
                     </div>
-                  </CardFooter>
-                </Card>
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          ref={containerRef}
-        >
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Button
             className="size-12 rounded-full shadow-lg bg-white border border-neutral-300 dark:border-0 dark:bg-neutral-800"
             onClick={() => setIsOpen(!isOpen)}

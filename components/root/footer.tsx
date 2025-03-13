@@ -43,19 +43,19 @@ const Footer = () => {
                 y: 20,
                 rotateX: 90,
                 opacity: 0,
-                filter: "blur(4px)",
+                scale: 0.95,
               },
               animate: {
                 y: 0,
                 rotateX: 0,
                 opacity: 1,
-                filter: "blur(0px)",
+                scale: 1,
               },
               exit: {
                 y: -20,
                 rotateX: -90,
                 opacity: 0,
-                filter: "blur(4px)",
+                scale: 0.95,
               },
             }}
           >
