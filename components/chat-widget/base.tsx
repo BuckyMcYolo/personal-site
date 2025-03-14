@@ -1,42 +1,41 @@
 "use client"
 
 import React, { useEffect, useRef, useState } from "react"
-import useMeasure from "react-use-measure"
 import { AnimatePresence, motion, MotionConfig } from "framer-motion"
-import { Send, Maximize2, MessageCircle, Minimize2, X } from "lucide-react"
+import { Send, MessageCircle, X } from "lucide-react"
+import type { Components } from "react-markdown"
 import { Avatar } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import useClickOutside from "../motion-primitives/useClickOutside"
+import { useChat } from "@ai-sdk/react"
+import Markdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+import rehypeRaw from "rehype-raw"
+import CodeBlock from "../mdx/CodeBlock"
 
 export const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [screenWidth, setScreenWidth] = useState(0)
 
-  const [message, setMessage] = useState("")
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content:
-        "Hi there! I'm an AI assistant that can tell you about my creator's background, resume, and projects. What would you like to know?",
-    },
-  ])
+  const { messages, input, handleInputChange, handleSubmit } = useChat({
+    initialMessages: [
+      {
+        role: "assistant",
+        content: "Hello! How can I help you?",
+        id: "1",
+      },
+    ],
+  })
 
   const ref = useRef<HTMLDivElement>(null!)
 
   // Close chat when clicking outside
-  useClickOutside(ref, () => {
-    setIsOpen(false)
-  })
+  // useClickOutside(ref, () => {
+  //   setIsOpen(false)
+  // })
 
   useEffect(() => {
     if (window) {
@@ -54,57 +53,24 @@ export const ChatWidget = () => {
     }
   }, [])
 
-  // Simulate AI responses based on user input
-  const getAIResponse = (userMessage: string) => {
-    const lowerCaseMessage = userMessage.toLowerCase()
-
-    if (
-      lowerCaseMessage.includes("background") ||
-      lowerCaseMessage.includes("about")
-    ) {
-      return "I'm a software engineer specializing in full-stack development with expertise in React, Next.js, Node.js, and Python. I've been coding professionally for over 5 years and love building intuitive, performant web applications."
-    } else if (
-      lowerCaseMessage.includes("resume") ||
-      lowerCaseMessage.includes("experience")
-    ) {
-      return "My professional experience includes working at tech startups and as a freelancer. I've built e-commerce platforms, SaaS applications, and data visualization tools. My strongest skills are in frontend development with React and building scalable backend systems."
-    } else if (
-      lowerCaseMessage.includes("project") ||
-      lowerCaseMessage.includes("work")
-    ) {
-      return "Some of my recent projects include an e-commerce platform built with Next.js, a real-time analytics dashboard using React and D3, and a content management system with a Node.js backend. You can see more details in the Projects section of this site!"
-    } else if (
-      lowerCaseMessage.includes("contact") ||
-      lowerCaseMessage.includes("hire")
-    ) {
-      return "You can contact me via email at example@domain.com or through the contact form on this site. I'm currently available for freelance work and interested in discussing new opportunities."
-    } else {
-      return "I'd be happy to tell you more about my creator's background, resume, projects, or how to get in touch. Just let me know what you're interested in!"
-    }
-  }
-
-  const handleSend = () => {
-    if (message.trim()) {
-      // Add user message
-      const userMessage = { role: "user", content: message }
-
-      // Get AI response
-      const aiResponse = { role: "assistant", content: getAIResponse(message) }
-
-      // Update messages state with both messages
-      setMessages([...messages, userMessage, aiResponse])
-
-      // Clear input
-      setMessage("")
-    }
-  }
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
-      handleSend()
+      handleSubmit()
     }
   }
+
+  const viewportRef = useRef<HTMLDivElement>(null)
+
+  //scroll to bottom
+  useEffect(() => {
+    if (viewportRef.current) {
+      viewportRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      })
+    }
+  }, [messages])
 
   return (
     <MotionConfig
@@ -123,7 +89,7 @@ export const ChatWidget = () => {
                 initial={{ opacity: 0, scale: 0.75, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.75, y: 20 }}
-                className={"absolute bottom-0 right-0 mb-2"}
+                className={cn("absolute bottom-0 right-0 mb-2")}
                 style={{
                   width:
                     screenWidth > 420
@@ -131,19 +97,20 @@ export const ChatWidget = () => {
                       : screenWidth - 40,
                 }}
               >
-                <div className="shadow-lg overflow-hidden border border-zinc-950/10 dark:border-neutral-900 py-0 bg-white dark:bg-black rounded-lg">
-                  <div className="bg-neutral-100 dark:bg-primary/10 py-2 px-4 border-b border-neutral-200 dark:border-neutral-900">
+                <div className="shadow-lg border border-zinc-950/10 dark:border-neutral-900 py-0 bg-white dark:bg-black rounded-lg">
+                  <div className="bg-neutral-100 dark:bg-primary/10 py-2 px-4 border-b border-neutral-200 dark:border-neutral-900 rounded-t-lg">
                     <div className="flex items-center justify-between">
                       <div className="text-lg font-medium">Ask AI about me</div>
                     </div>
                   </div>
 
                   <motion.div>
-                    <ScrollArea
-                      className={cn(`px-4 py-2`, "h-[25.5rem]")}
-                      type="auto"
+                    <div
+                      className={cn(
+                        "relative px-4 py-2 h-[25.5rem] overflow-auto scrollbar-thin scrollbar-track-white scrollbar-thumb-neutral-400 dark:scrollbar-track-black dark:scrollbar-thumb-neutral-800"
+                      )}
                     >
-                      <div className="space-y-4 pb-3">
+                      <div className="space-y-4 pb-3 pt-2">
                         {messages.map((msg, index) => (
                           <motion.div
                             key={index}
@@ -157,49 +124,212 @@ export const ChatWidget = () => {
                             transition={{ delay: 0.1 * (index % 2) }}
                           >
                             <div
-                              className={`flex items-start max-w-[80%] ${
+                              className={`flex items-start ${
                                 msg.role === "user"
                                   ? "bg-primary text-primary-foreground"
                                   : "bg-muted"
                               } rounded-lg px-3 py-2`}
+                              style={{
+                                maxWidth: "100%",
+                                width: "auto",
+                              }}
                             >
                               {msg.role === "assistant" && (
-                                <Avatar className="h-6 w-6 mr-2 mt-1">
+                                <Avatar className="h-6 w-6 mr-2 mt-1 flex-shrink-0">
                                   <MessageCircle className="h-4 w-4" />
                                 </Avatar>
                               )}
-                              <div>
-                                <p
+                              <div className="min-w-0 max-w-full overflow-hidden flex-1">
+                                <div
                                   className={`text-sm ${
                                     msg.role === "user"
                                       ? "text-primary-foreground"
                                       : ""
-                                  }`}
+                                  } break-words overflow-hidden max-w-full`}
                                 >
-                                  {msg.content}
-                                </p>
+                                  <Markdown
+                                    remarkPlugins={[remarkGfm]}
+                                    rehypePlugins={[rehypeRaw]}
+                                    components={{
+                                      code: ({
+                                        className,
+                                        children,
+                                        ...props
+                                      }) => {
+                                        const match = /language-(\w+)/.exec(
+                                          className || ""
+                                        )
+                                        const language = match ? match[1] : ""
+                                        const inline =
+                                          !className?.includes("language-")
+
+                                        if (inline) {
+                                          return (
+                                            <code
+                                              className="px-1 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 font-mono text-sm"
+                                              {...props}
+                                            >
+                                              {children}
+                                            </code>
+                                          )
+                                        }
+
+                                        return (
+                                          <div className="max-w-full overflow-hidden">
+                                            <CodeBlock className={className}>
+                                              {String(children).replace(
+                                                /\n$/,
+                                                ""
+                                              )}
+                                            </CodeBlock>
+                                          </div>
+                                        )
+                                      },
+
+                                      p({ children, ...props }) {
+                                        return (
+                                          <p
+                                            className="break-words"
+                                            style={{
+                                              overflowWrap: "break-word",
+                                              wordBreak: "break-word",
+                                            }}
+                                            {...props}
+                                          >
+                                            {children}
+                                          </p>
+                                        )
+                                      },
+
+                                      // Custom heading components
+                                      h2({ children, ...props }) {
+                                        return (
+                                          <h2
+                                            className="text-lg font-semibold mt-2 mb-1"
+                                            style={{
+                                              overflowWrap: "break-word",
+                                              wordBreak: "break-word",
+                                            }}
+                                            {...props}
+                                          >
+                                            {children}
+                                          </h2>
+                                        )
+                                      },
+                                      h3({ children, ...props }) {
+                                        return (
+                                          <h3
+                                            className="text-base font-medium mt-2 mb-1"
+                                            style={{
+                                              overflowWrap: "break-word",
+                                              wordBreak: "break-word",
+                                            }}
+                                            {...props}
+                                          >
+                                            {children}
+                                          </h3>
+                                        )
+                                      },
+                                      h4({ children, ...props }) {
+                                        return (
+                                          <h4
+                                            className="text-sm font-medium mt-1 mb-1"
+                                            style={{
+                                              overflowWrap: "break-word",
+                                              wordBreak: "break-word",
+                                            }}
+                                            {...props}
+                                          >
+                                            {children}
+                                          </h4>
+                                        )
+                                      },
+                                      // Add more custom components as needed
+                                      a({ href, children, ...props }) {
+                                        return (
+                                          <a
+                                            href={href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-primary hover:underline"
+                                            style={{ wordBreak: "break-all" }}
+                                            {...props}
+                                          >
+                                            {children}
+                                          </a>
+                                        )
+                                      },
+                                      ul({ children, ...props }) {
+                                        return (
+                                          <ul
+                                            className="list-disc list-inside pl-1 my-1"
+                                            style={{
+                                              overflowWrap: "break-word",
+                                              wordBreak: "break-word",
+                                            }}
+                                            {...props}
+                                          >
+                                            {children}
+                                          </ul>
+                                        )
+                                      },
+                                      ol({ children, ...props }) {
+                                        return (
+                                          <ol
+                                            className="list-decimal list-inside pl-1 my-1"
+                                            style={{
+                                              overflowWrap: "break-word",
+                                              wordBreak: "break-word",
+                                            }}
+                                            {...props}
+                                          >
+                                            {children}
+                                          </ol>
+                                        )
+                                      },
+                                      blockquote({ children, ...props }) {
+                                        return (
+                                          <blockquote
+                                            className="border-l-2 border-primary pl-3 italic my-1"
+                                            style={{
+                                              overflowWrap: "break-word",
+                                              wordBreak: "break-word",
+                                            }}
+                                            {...props}
+                                          >
+                                            {children}
+                                          </blockquote>
+                                        )
+                                      },
+                                    }}
+                                  >
+                                    {msg.content}
+                                  </Markdown>
+                                </div>
                               </div>
                             </div>
                           </motion.div>
                         ))}
                       </div>
-                    </ScrollArea>
+                      <div ref={viewportRef} />
+                    </div>
                   </motion.div>
 
                   <div className="p-3 border-t">
                     <div className="flex w-full items-center space-x-2 bg-neutral-100 dark:bg-neutral-900 rounded-lg pr-3">
                       <Textarea
                         placeholder="Ask me anything..."
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
+                        value={input}
+                        onChange={handleInputChange}
                         onKeyDown={handleKeyDown}
                         className="min-h-4 max-h-16 h-fit"
                         variant="filled"
+                        autoFocus
                       />
                       <Button
                         size="icon"
-                        onClick={handleSend}
-                        disabled={!message.trim()}
+                        onClick={handleSubmit}
+                        disabled={!input.trim()}
                         variant={"ghost"}
                         className="hover:bg-neutral-50 dark:hover:bg-neutral-800"
                       >
