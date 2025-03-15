@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useRef, useState } from "react"
-import { AnimatePresence, motion, MotionConfig } from "framer-motion"
+import { AnimatePresence, motion, MotionConfig, view } from "framer-motion"
 import { Send, MessageCircle, X } from "lucide-react"
 import type { Components } from "react-markdown"
 import { Avatar } from "@/components/ui/avatar"
@@ -71,6 +71,15 @@ export const ChatWidget = () => {
       })
     }
   }, [messages])
+
+  useEffect(() => {
+    if (isOpen && viewportRef.current) {
+      viewportRef.current.scrollIntoView({
+        behavior: "instant",
+        block: "end",
+      })
+    }
+  }, [isOpen])
 
   return (
     <MotionConfig
@@ -251,7 +260,7 @@ export const ChatWidget = () => {
                                             href={href}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-primary hover:underline"
+                                            className="text-blue-500 dark:text-blue-400 hover:underline"
                                             style={{ wordBreak: "break-all" }}
                                             {...props}
                                           >
