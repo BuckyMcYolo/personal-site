@@ -1,5 +1,7 @@
+import { queryIndex } from "@/lib/query-index"
 import { openai } from "@ai-sdk/openai"
-import { streamText } from "ai"
+import { streamText, tool } from "ai"
+import { z } from "zod"
 
 export const maxDuration = 60
 
@@ -40,12 +42,28 @@ KEY INFORMATION ABOUT JACOB:
 
 When discussing code examples, use proper markdown code blocks with language specification.
 Always respond with Markdown-formatted text.
+
 `
 
   const result = streamText({
     model: openai("gpt-4o"),
     messages,
     system: systemPrompt,
+    tools: {
+      getResumeDetails: tool({
+        description:
+          "Get details about Jacob Owens' resume, work history, and skills.",
+        parameters: z.object({
+          question: z
+            .string()
+            .describe("The question to ask about Jacob Owens' resume."),
+        }),
+        execute: async ({ question }) => {
+          const results = await queryIndex(question, 4)
+          return results
+        },
+      }),
+    },
   })
 
   return result.toDataStreamResponse()

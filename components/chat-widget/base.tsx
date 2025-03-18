@@ -2,12 +2,17 @@
 
 import React, { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion, MotionConfig, view } from "framer-motion"
-import { Send, MessageCircle, X } from "lucide-react"
-import type { Components } from "react-markdown"
+import {
+  Send,
+  MessageCircle,
+  X,
+  ChevronsUpDown,
+  LinkIcon,
+  FileIcon,
+} from "lucide-react"
 import { Avatar } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import useClickOutside from "../motion-primitives/useClickOutside"
 import { useChat } from "@ai-sdk/react"
@@ -19,15 +24,20 @@ import CodeBlock from "../mdx/CodeBlock"
 export const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [screenWidth, setScreenWidth] = useState(0)
+  const [sourceIndexExpanded, setSourceIndexExpanded] = useState<
+    number[] | null
+  >(null)
 
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     initialMessages: [
       {
         role: "assistant",
-        content: "Hello! How can I help you?",
+        content:
+          "Hello! I can tell you more about Jacob's background or book a meeting. How can I assist you?",
         id: "1",
       },
     ],
+    maxSteps: 3,
   })
 
   const ref = useRef<HTMLDivElement>(null!)
@@ -121,203 +131,282 @@ export const ChatWidget = () => {
                     >
                       <div className="space-y-4 pb-3 pt-2">
                         {messages.map((msg, index) => (
-                          <motion.div
-                            key={index}
-                            className={`flex ${
-                              msg.role === "user"
-                                ? "justify-end"
-                                : "justify-start"
-                            }`}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 * (index % 2) }}
-                          >
-                            <div
-                              className={`flex items-start ${
+                          <div key={index} className="space-y-2">
+                            <motion.div
+                              className={`flex ${
                                 msg.role === "user"
-                                  ? "bg-primary text-primary-foreground"
-                                  : "bg-muted"
-                              } rounded-lg px-3 py-2`}
-                              style={{
-                                maxWidth: "100%",
-                                width: "auto",
-                              }}
+                                  ? "justify-end"
+                                  : "justify-start"
+                              }`}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.1 * (index % 2) }}
                             >
-                              {msg.role === "assistant" && (
-                                <Avatar className="h-6 w-6 mr-2 mt-1 flex-shrink-0">
-                                  <MessageCircle className="h-4 w-4" />
-                                </Avatar>
-                              )}
-                              <div className="min-w-0 max-w-full overflow-hidden flex-1">
-                                <div
-                                  className={`text-sm ${
-                                    msg.role === "user"
-                                      ? "text-primary-foreground"
-                                      : ""
-                                  } break-words overflow-hidden max-w-full`}
-                                >
-                                  <Markdown
-                                    remarkPlugins={[remarkGfm]}
-                                    rehypePlugins={[rehypeRaw]}
-                                    components={{
-                                      code: ({
-                                        className,
-                                        children,
-                                        ...props
-                                      }) => {
-                                        const match = /language-(\w+)/.exec(
-                                          className || ""
-                                        )
-                                        const language = match ? match[1] : ""
-                                        const inline =
-                                          !className?.includes("language-")
+                              <div
+                                className={`flex items-start ${
+                                  msg.role === "user"
+                                    ? "bg-primary text-primary-foreground"
+                                    : "bg-muted"
+                                } rounded-lg px-3 py-2`}
+                                style={{
+                                  maxWidth: "100%",
+                                  width: "auto",
+                                }}
+                              >
+                                {msg.role === "assistant" && (
+                                  <Avatar className="h-6 w-6 mr-2 mt-1 flex-shrink-0">
+                                    <MessageCircle className="h-4 w-4" />
+                                  </Avatar>
+                                )}
+                                <div className="min-w-0 max-w-full overflow-hidden flex-1">
+                                  <div
+                                    className={`text-sm ${
+                                      msg.role === "user"
+                                        ? "text-primary-foreground"
+                                        : ""
+                                    } break-words overflow-hidden max-w-full`}
+                                  >
+                                    <Markdown
+                                      remarkPlugins={[remarkGfm]}
+                                      rehypePlugins={[rehypeRaw]}
+                                      components={{
+                                        code: ({
+                                          className,
+                                          children,
+                                          ...props
+                                        }) => {
+                                          const match = /language-(\w+)/.exec(
+                                            className || ""
+                                          )
+                                          const language = match ? match[1] : ""
+                                          const inline =
+                                            !className?.includes("language-")
 
-                                        if (inline) {
+                                          if (inline) {
+                                            return (
+                                              <code
+                                                className="px-1 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 font-mono text-sm"
+                                                {...props}
+                                              >
+                                                {children}
+                                              </code>
+                                            )
+                                          }
+
                                           return (
-                                            <code
-                                              className="px-1 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 font-mono text-sm"
+                                            <div className="max-w-full overflow-hidden">
+                                              <CodeBlock className={className}>
+                                                {String(children).replace(
+                                                  /\n$/,
+                                                  ""
+                                                )}
+                                              </CodeBlock>
+                                            </div>
+                                          )
+                                        },
+
+                                        p({ children, ...props }) {
+                                          return (
+                                            <p
+                                              className="break-words"
+                                              style={{
+                                                overflowWrap: "break-word",
+                                                wordBreak: "break-word",
+                                              }}
                                               {...props}
                                             >
                                               {children}
-                                            </code>
+                                            </p>
                                           )
-                                        }
+                                        },
 
-                                        return (
-                                          <div className="max-w-full overflow-hidden">
-                                            <CodeBlock className={className}>
-                                              {String(children).replace(
-                                                /\n$/,
-                                                ""
-                                              )}
-                                            </CodeBlock>
-                                          </div>
-                                        )
-                                      },
-
-                                      p({ children, ...props }) {
-                                        return (
-                                          <p
-                                            className="break-words"
-                                            style={{
-                                              overflowWrap: "break-word",
-                                              wordBreak: "break-word",
-                                            }}
-                                            {...props}
-                                          >
-                                            {children}
-                                          </p>
-                                        )
-                                      },
-
-                                      // Custom heading components
-                                      h2({ children, ...props }) {
-                                        return (
-                                          <h2
-                                            className="text-lg font-semibold mt-2 mb-1"
-                                            style={{
-                                              overflowWrap: "break-word",
-                                              wordBreak: "break-word",
-                                            }}
-                                            {...props}
-                                          >
-                                            {children}
-                                          </h2>
-                                        )
-                                      },
-                                      h3({ children, ...props }) {
-                                        return (
-                                          <h3
-                                            className="text-base font-medium mt-2 mb-1"
-                                            style={{
-                                              overflowWrap: "break-word",
-                                              wordBreak: "break-word",
-                                            }}
-                                            {...props}
-                                          >
-                                            {children}
-                                          </h3>
-                                        )
-                                      },
-                                      h4({ children, ...props }) {
-                                        return (
-                                          <h4
-                                            className="text-sm font-medium mt-1 mb-1"
-                                            style={{
-                                              overflowWrap: "break-word",
-                                              wordBreak: "break-word",
-                                            }}
-                                            {...props}
-                                          >
-                                            {children}
-                                          </h4>
-                                        )
-                                      },
-                                      // Add more custom components as needed
-                                      a({ href, children, ...props }) {
-                                        return (
-                                          <a
-                                            href={href}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-500 dark:text-blue-400 hover:underline"
-                                            style={{ wordBreak: "break-all" }}
-                                            {...props}
-                                          >
-                                            {children}
-                                          </a>
-                                        )
-                                      },
-                                      ul({ children, ...props }) {
-                                        return (
-                                          <ul
-                                            className="list-disc list-inside pl-1 my-1"
-                                            style={{
-                                              overflowWrap: "break-word",
-                                              wordBreak: "break-word",
-                                            }}
-                                            {...props}
-                                          >
-                                            {children}
-                                          </ul>
-                                        )
-                                      },
-                                      ol({ children, ...props }) {
-                                        return (
-                                          <ol
-                                            className="list-decimal list-inside pl-1 my-1"
-                                            style={{
-                                              overflowWrap: "break-word",
-                                              wordBreak: "break-word",
-                                            }}
-                                            {...props}
-                                          >
-                                            {children}
-                                          </ol>
-                                        )
-                                      },
-                                      blockquote({ children, ...props }) {
-                                        return (
-                                          <blockquote
-                                            className="border-l-2 border-primary pl-3 italic my-1"
-                                            style={{
-                                              overflowWrap: "break-word",
-                                              wordBreak: "break-word",
-                                            }}
-                                            {...props}
-                                          >
-                                            {children}
-                                          </blockquote>
-                                        )
-                                      },
-                                    }}
-                                  >
-                                    {msg.content}
-                                  </Markdown>
+                                        // Custom heading components
+                                        h2({ children, ...props }) {
+                                          return (
+                                            <h2
+                                              className="text-lg font-semibold mt-2 mb-1"
+                                              style={{
+                                                overflowWrap: "break-word",
+                                                wordBreak: "break-word",
+                                              }}
+                                              {...props}
+                                            >
+                                              {children}
+                                            </h2>
+                                          )
+                                        },
+                                        h3({ children, ...props }) {
+                                          return (
+                                            <h3
+                                              className="text-base font-medium mt-2 mb-1"
+                                              style={{
+                                                overflowWrap: "break-word",
+                                                wordBreak: "break-word",
+                                              }}
+                                              {...props}
+                                            >
+                                              {children}
+                                            </h3>
+                                          )
+                                        },
+                                        h4({ children, ...props }) {
+                                          return (
+                                            <h4
+                                              className="text-sm font-medium mt-1 mb-1"
+                                              style={{
+                                                overflowWrap: "break-word",
+                                                wordBreak: "break-word",
+                                              }}
+                                              {...props}
+                                            >
+                                              {children}
+                                            </h4>
+                                          )
+                                        },
+                                        // Add more custom components as needed
+                                        a({ href, children, ...props }) {
+                                          return (
+                                            <a
+                                              href={href}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              className="text-blue-500 dark:text-blue-400 hover:underline"
+                                              style={{ wordBreak: "break-all" }}
+                                              {...props}
+                                            >
+                                              {children}
+                                            </a>
+                                          )
+                                        },
+                                        ul({ children, ...props }) {
+                                          return (
+                                            <ul
+                                              className="list-disc list-inside pl-1 my-1"
+                                              style={{
+                                                overflowWrap: "break-word",
+                                                wordBreak: "break-word",
+                                              }}
+                                              {...props}
+                                            >
+                                              {children}
+                                            </ul>
+                                          )
+                                        },
+                                        ol({ children, ...props }) {
+                                          return (
+                                            <ol
+                                              className="list-decimal list-inside pl-1 my-1"
+                                              style={{
+                                                overflowWrap: "break-word",
+                                                wordBreak: "break-word",
+                                              }}
+                                              {...props}
+                                            >
+                                              {children}
+                                            </ol>
+                                          )
+                                        },
+                                        blockquote({ children, ...props }) {
+                                          return (
+                                            <blockquote
+                                              className="border-l-2 border-primary pl-3 italic my-1"
+                                              style={{
+                                                overflowWrap: "break-word",
+                                                wordBreak: "break-word",
+                                              }}
+                                              {...props}
+                                            >
+                                              {children}
+                                            </blockquote>
+                                          )
+                                        },
+                                      }}
+                                    >
+                                      {msg.content}
+                                    </Markdown>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </motion.div>
+                            </motion.div>
+                            {msg.parts.map((part, partIndex) => {
+                              if (part.type === "tool-invocation") {
+                                if (
+                                  part.toolInvocation.toolName ===
+                                    "getResumeDetails" &&
+                                  part.toolInvocation.state === "result"
+                                ) {
+                                  return (
+                                    <div
+                                      key={partIndex}
+                                      className="w-full mt-2"
+                                    >
+                                      <div
+                                        className="flex items-center justify-between gap-2 bg-muted rounded-md px-4 py-2.5 w-1/2 border-l-4 border-blue-500 shadow-sm cursor-pointer hover:bg-muted/80 transition-all duration-200"
+                                        onClick={() => {
+                                          setSourceIndexExpanded((prev) =>
+                                            prev?.includes(index)
+                                              ? prev.filter((i) => i !== index)
+                                              : [...(prev || []), index]
+                                          )
+                                        }}
+                                      >
+                                        <div className="flex items-center gap-2">
+                                          <FileIcon
+                                            size={14}
+                                            className="text-blue-500"
+                                          />
+                                          <div className="text-sm font-medium">
+                                            Sources
+                                          </div>
+                                        </div>
+                                        <div className="text-muted-foreground">
+                                          <ChevronsUpDown size={14} />
+                                        </div>
+                                      </div>
+
+                                      {sourceIndexExpanded?.includes(index) &&
+                                        part.toolInvocation.state ===
+                                          "result" && (
+                                          <div className="w-1/2 rounded-md bg-muted/50 p-3 mt-1 border border-muted-foreground/10 shadow-sm">
+                                            <div className="space-y-2">
+                                              {part.toolInvocation?.result.map(
+                                                (
+                                                  res: {
+                                                    content: string
+                                                    title: string
+                                                    source: string
+                                                  },
+                                                  idx: number
+                                                ) => (
+                                                  <div
+                                                    key={idx}
+                                                    className="flex items-start gap-2 py-1 px-1 hover:bg-muted/80 rounded-sm transition-colors"
+                                                  >
+                                                    <LinkIcon
+                                                      size={14}
+                                                      className="text-blue-500 mt-0.5 flex-shrink-0"
+                                                    />
+                                                    <a
+                                                      href={res.source}
+                                                      target="_blank"
+                                                      rel="noopener noreferrer"
+                                                      className="text-blue-500 dark:text-blue-400 hover:underline text-sm"
+                                                    >
+                                                      {res.title ||
+                                                        "Source Document"}
+                                                    </a>
+                                                  </div>
+                                                )
+                                              )}
+                                            </div>
+                                          </div>
+                                        )}
+                                    </div>
+                                  )
+                                }
+                              }
+                            })}
+                          </div>
                         ))}
                       </div>
                       <div ref={viewportRef} />
@@ -354,7 +443,7 @@ export const ChatWidget = () => {
 
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Button
-            className="size-12 rounded-full shadow-lg bg-white border border-neutral-300 dark:border-0 dark:bg-neutral-800"
+            className="size-12 rounded-full shadow-lg bg-black hover:bg-black text-white dark:bg-neutral-800"
             onClick={() => setIsOpen(!isOpen)}
             variant={"secondary"}
             size="icon"
