@@ -9,6 +9,7 @@ import {
   ChevronsUpDown,
   LinkIcon,
   FileIcon,
+  Trash,
 } from "lucide-react"
 import { Avatar } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -20,6 +21,7 @@ import Markdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import rehypeRaw from "rehype-raw"
 import CodeBlock from "../mdx/CodeBlock"
+import Cal, { getCalApi } from "@calcom/embed-react"
 
 export const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -28,24 +30,38 @@ export const ChatWidget = () => {
     number[] | null
   >(null)
 
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
-    initialMessages: [
-      {
-        role: "assistant",
-        content:
-          "Hello! I can tell you more about Jacob's background or book a meeting. How can I assist you?",
-        id: "1",
+  useEffect(() => {
+    async function getCal() {
+      const cal = await getCalApi({ namespace: "30min" })
+      cal("ui", { hideEventTypeDetails: false, layout: "month_view" })
+    }
+    getCal()
+  }, [])
+
+  const { messages, input, handleInputChange, handleSubmit, setMessages } =
+    useChat({
+      initialMessages: [
+        {
+          role: "assistant",
+          content:
+            "Hello! I can tell you more about Jacob's background or book a meeting. How can I assist you?",
+          id: "1",
+        },
+      ],
+      onToolCall({ toolCall }) {
+        if (toolCall.toolName === "showBookingCalender") {
+          return "Displaying Calender in UI..."
+        }
       },
-    ],
-    maxSteps: 3,
-  })
+      maxSteps: 3,
+    })
 
   const ref = useRef<HTMLDivElement>(null!)
 
   // Close chat when clicking outside
-  // useClickOutside(ref, () => {
-  //   setIsOpen(false)
-  // })
+  useClickOutside(ref, () => {
+    setIsOpen(false)
+  })
 
   useEffect(() => {
     if (window) {
@@ -120,6 +136,26 @@ export const ChatWidget = () => {
                   <div className="bg-neutral-100 dark:bg-primary/10 py-2 px-4 border-b border-neutral-200 dark:border-neutral-900 rounded-t-lg">
                     <div className="flex items-center justify-between">
                       <div className="text-lg font-medium">Ask AI about me</div>
+                      {messages.length > 1 && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-muted-foreground group"
+                          onClick={() => {
+                            setMessages([
+                              {
+                                role: "assistant",
+                                content:
+                                  "Hello! I can tell you more about Jacob's background or book a meeting. How can I assist you?",
+                                id: "1",
+                              },
+                            ])
+                          }}
+                        >
+                          <X className="size-3.5 hidden group-hover:block" />
+                          Clear{" "}
+                        </Button>
+                      )}
                     </div>
                   </div>
 
@@ -131,7 +167,7 @@ export const ChatWidget = () => {
                     >
                       <div className="space-y-4 pb-3 pt-2">
                         {messages.map((msg, index) => (
-                          <div key={index} className="space-y-2">
+                          <div key={msg.id} className="space-y-2">
                             <motion.div
                               className={`flex ${
                                 msg.role === "user"
@@ -401,6 +437,24 @@ export const ChatWidget = () => {
                                             </div>
                                           </div>
                                         )}
+                                    </div>
+                                  )
+                                } else if (
+                                  part.toolInvocation.toolName ===
+                                  "showBookingCalender"
+                                ) {
+                                  return (
+                                    <div key={partIndex}>
+                                      <Cal
+                                        namespace="30min"
+                                        calLink="jacob-owens/30min"
+                                        style={{
+                                          width: "100%",
+                                          height: "100%",
+                                          overflow: "scroll",
+                                        }}
+                                        config={{ layout: "month_view" }}
+                                      />
                                     </div>
                                   )
                                 }

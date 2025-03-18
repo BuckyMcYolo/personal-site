@@ -58,10 +58,18 @@ Always respond with Markdown-formatted text.
             .string()
             .describe("The question to ask about Jacob Owens' resume."),
         }),
+        //server side execution
         execute: async ({ question }) => {
           const results = await queryIndex(question, 4)
           return results
         },
+      }),
+      //client side execution
+      showBookingCalender: tool({
+        description: "Show the booking calender from Cal.com",
+        parameters: z.object({
+          show: z.boolean().describe("Whether to show the calender"),
+        }),
       }),
     },
   })
